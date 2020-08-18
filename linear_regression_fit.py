@@ -53,9 +53,8 @@ for count, degree in enumerate([1,10]):#, 2, 15
     plt.legend(loc='best')
     fig1 = plt.gcf()
     fig1.subplots_adjust(top = 0.98, bottom = 0.1, right = 0.98, left = 0.08, hspace = 0, wspace = 0)
-    fig1.savefig('../../Illustrations/linear-regression-' + fit[count] + '.eps', format='eps', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
-    fig1.savefig('../../Illustrations/linear-regression-' + fit[count] + '.pdf', format='pdf', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
-    fig1.savefig('../../Illustrations/linear-regression-' + fit[count] + '.png', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
-
+    # fig1.savefig('linear-regression-' + fit[count] + '.eps', format='eps', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
+    # fig1.savefig('linear-regression-' + fit[count] + '.pdf', format='pdf', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
+    # fig1.savefig('linear-regression-' + fit[count] + '.png', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
 
 plt.show()
