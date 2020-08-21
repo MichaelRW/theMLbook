@@ -25,6 +25,15 @@ matplotlib.pyplot.close("all")
 
 
 
+#%% Example Reference
+
+# https://towardsdatascience.com/logistic-regression-using-python-sklearn-numpy-mnist-handwriting-recognition-matplotlib-a6b31e2b166a
+
+
+#%%
+
+
+
 #%% Function Definition
 
 def f(x):
