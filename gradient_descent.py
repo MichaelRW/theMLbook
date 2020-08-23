@@ -55,11 +55,11 @@ def train(spendings, sales, w, b, alpha, epochs):
             X_plot = np.linspace(0,50,50)
             plt.plot(X_plot, X_plot*w + b)
             #plt.show()
-            fig1 = plt.gcf()
-            fig1.subplots_adjust(top = 0.98, bottom = 0.1, right = 0.98, left = 0.08, hspace = 0, wspace = 0)
-            fig1.savefig('../../Illustrations/gradient_descent-' + str(image_counter) + '.eps', format='eps', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
-            fig1.savefig('../../Illustrations/gradient_descent-' + str(image_counter) + '.pdf', format='pdf', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
-            fig1.savefig('../../Illustrations/gradient_descent-' + str(image_counter) + '.png', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
+            # fig1 = plt.gcf()
+            # fig1.subplots_adjust(top = 0.98, bottom = 0.1, right = 0.98, left = 0.08, hspace = 0, wspace = 0)
+            # fig1.savefig('../../Illustrations/gradient_descent-' + str(image_counter) + '.eps', format='eps', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
+            # fig1.savefig('../../Illustrations/gradient_descent-' + str(image_counter) + '.pdf', format='pdf', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
+            # fig1.savefig('../../Illustrations/gradient_descent-' + str(image_counter) + '.png', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
             image_counter += 1
     return w, b
 

@@ -7,19 +7,16 @@ Created on Fri Aug 21 11:06:30 2020
 
 #%% Environment
 
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_squared_error
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn import metrics
+from sklearn.datasets import fetch_openml
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
 
 import matplotlib
-matplotlib.rcParams['mathtext.fontset'] = 'stix'
-matplotlib.rcParams['font.family'] = 'STIXGeneral'
-matplotlib.rcParams.update({'font.size': 18})
-
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import seaborn as sns
 
 matplotlib.pyplot.close("all")
 
@@ -30,85 +27,83 @@ matplotlib.pyplot.close("all")
 # https://towardsdatascience.com/logistic-regression-using-python-sklearn-numpy-mnist-handwriting-recognition-matplotlib-a6b31e2b166a
 
 
-#%%
+#%% Download the MINST Digit Dataset
 
-
-
-#%% Function Definition
-
-def f(x):
-    """ Function to approximate by polynomial interpolation. """
-    return 0.5 * x
-
-
-
-#%% Create Signal with Noise
-
-x_plot = np.linspace(-10, 10, 100)
-
-# Generate points and keep a subset of them.
-rng = np.random.RandomState(0)  # Set RNG state to replicate results.
-
-x = np.linspace(-10, 10, 100)
-rng.shuffle(x)  # Randomize order of elements in vector x.
-x = np.sort(x[:10])  # Select first 10 elements.
+mnist = fetch_openml('mnist_784')
 #
-noise = np.random.normal( loc=0.0, scale=1.0, size=len(x) )
-y = f(x) + noise
-
-# Create matrix versions of these arrays.
-X = x[:, np.newaxis]  # Column vector -> 10-by-1
-X_plot = x_plot[:, np.newaxis]  # Column vector -> 100-by-1
-
-colors = ['red', 'red'];  lw = 2
+# 70,000 hand-written digit images of size 28-by-28.
 
 
-#%% Regression Modeling
+#%% Establish Training and Testing Datasets from Working Dataset
 
-type_of_regression = ["Linear Regression", "Regression of Degree 10"]
-fit = ["Fit", "Overfit"]
+X_train, X_test, y_train, y_test = \
+    train_test_split( mnist.data, mnist.target, test_size=1/7.0, random_state=0)
 
-print()
 
-for count, degree in enumerate( [1, 10] ):  # Starting enumeration at zero.
+#%% Show Illustrative Training Images and Respective Labels
     
-    plt.figure(count)
-    #
-    axes = plt.gca()
-    axes.set_xlim([-15,15]); axes.set_ylim([-20,20])
-    plt.scatter(x, y, color='navy', s=30, marker='o', label="Training Examples")
-    plt.xticks([-10.0, -5.0, 0.0, 5.0, 10.0]); plt.yticks([-15.0,-10.0, -5.0, 0.0, 5.0, 10.0,15.0])
-    
-    # model = make_pipeline( PolynomialFeatures(degree), Ridge() )
-    #
-    # https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html
-    #
-    # Uses linear least squares with L2-norm (also known as Tikhonov Regularization)
-    
-    model = make_pipeline( PolynomialFeatures(degree), LinearRegression() )
-    #
-    # https://scikit-learn.org/stable/modules/linear_model.html
-    #
-    # Uses ordinary least squares.
-    
-    model.fit(X, y)
-    y_plot = model.predict(X_plot)
-    #
-    plt.plot(x_plot, y_plot, color=colors[count], linewidth=lw,label=type_of_regression[count])
-    plt.legend(loc='best'); plt.grid()
-    fig1 = plt.gcf()
-    #
-    yTrue = y; yPredict = model.predict(X)
-    SMSE = mean_squared_error( yTrue, yPredict, sample_weight=None, multioutput='uniform_average', squared=True)
-    print(f"Squared MSE: {SMSE}")
-    
-    # fig1.subplots_adjust(top = 0.98, bottom = 0.1, right = 0.98, left = 0.08, hspace = 0, wspace = 0)
-    # fig1.savefig('linear-regression-' + fit[count] + '.eps', format='eps', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
-    # fig1.savefig('linear-regression-' + fit[count] + '.pdf', format='pdf', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
-    # fig1.savefig('linear-regression-' + fit[count] + '.png', dpi=1000, bbox_inches = 'tight', pad_inches = 0)
+plt.figure(figsize=(20,4))
 
-plt.show()
+for index, (image, label) in enumerate(zip(X_train[0:5], y_train[0:5])):
+    plt.subplot(1, 5, index + 1)
+    plt.imshow(np.reshape(image, (28,28)), cmap=plt.cm.gray)
+    plt.title('Training: %s\n' % label, fontsize = 20)
+    
+    
+#%% Instantiate Instance of the LogisticRegression Class with Default Parameters
+    
+model_logisticRegression = \
+    LogisticRegression(penalty='l2', dual=False, \
+    tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, \
+    class_weight=None, random_state=None, solver='lbfgs', max_iter=1000, \
+    multi_class='auto', verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)
+#
+model_logisticRegression.fit(X_train, y_train)
+yPredicted = model_logisticRegression.predict(X_test)
 
+
+#%% Performance Evaluation - Confusion Matrix
+
+confusionMatrix = metrics.confusion_matrix(y_test, yPredicted)
+print(); print(confusionMatrix)
+
+
+#%% Visualize Confusion Matrix using Seaborn
+
+class_names=[0,1] # name  of classes
+fig, ax = plt.subplots()
+tick_marks = np.arange(len(class_names))
+plt.xticks(tick_marks, class_names)
+plt.yticks(tick_marks, class_names)
+
+sns.heatmap(pd.DataFrame(confusionMatrix), annot=True, cmap="YlGnBu" ,fmt='g')
+ax.xaxis.set_label_position("top")
+# plt.tight_layout()
+plt.title('Confusion Matrix', y=1.1)
+plt.ylabel('Actual Label'); plt.xlabel('Predicted Label')
+
+
+#%% Accuracy
+
+score = model_logisticRegression.score(X_test, y_test)
+print(); print('Accuracy score: {0:0.4f}'.format(score))
+
+
+#%% Show Subset of Misclassified Digits
+
+index = 0; misclassifiedIndexes = []
+
+for label, predict in zip(y_test, yPredicted):
+    if label != predict:
+        misclassifiedIndexes.append(index)
+        index +=1
+        
+plt.figure(figsize=(20,4))
+
+for plotIndex, badIndex in enumerate(misclassifiedIndexes[0:5]):
+    plt.subplot(1, 5, plotIndex + 1)
+    plt.imshow(np.reshape(X_test[badIndex], (28,28)), cmap=plt.cm.gray)
+    plt.title('Predicted: {}, Actual: {}'.format(yPredicted[badIndex], y_test[badIndex]), fontsize = 15)
 
 #%% Clean-up
 

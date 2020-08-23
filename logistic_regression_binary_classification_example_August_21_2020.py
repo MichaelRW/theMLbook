@@ -7,18 +7,10 @@ Created on Fri Aug 21 11:06:30 2020
 
 #%% Environment
 
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_squared_error
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import PolynomialFeatures
-
 import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'stix'
 matplotlib.rcParams['font.family'] = 'STIXGeneral'
 matplotlib.rcParams.update({'font.size': 18})
-
-
 
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
@@ -28,7 +20,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import sys
 
 matplotlib.pyplot.close("all")
 
@@ -61,7 +52,7 @@ X_train, X_test, y_train, y_test = \
     train_test_split( features, labels, test_size=0.25, random_state=0 )
     
     
-#%% Instantiate Instance of LogisticRegression Class with Default Arguments
+#%% Instantiate Instance of the LogisticRegression Class with Default Arguments
     
 model_logisticRegression = \
     LogisticRegression(penalty='l2', dual=False, \
