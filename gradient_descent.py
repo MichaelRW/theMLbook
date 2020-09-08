@@ -20,7 +20,6 @@ import numpy as np
 import time
 
 
-
 #%% Function Definitions
 
 def plot_data_and_bestLine(x, y, w, b):
@@ -131,7 +130,6 @@ def predict(x, w, b):
     return w*x + b
 
 
-
 #%% Processing
     
 index, tv, radioAdvertisingSpending, newspaper, sales = \
@@ -151,7 +149,6 @@ print(); print('New X: {0}, Estimated Sales: {1:0.2f}'.format(x_new, predict(x_n
 # Via Scikit Learng Library
 model = trainingViaSKLearn(x.reshape(-1,1), y.reshape(-1,1)); yPredicted=model.predict([[x_new]])
 print(); print(yPredicted)
-
 
 
 #%% Clean-up
